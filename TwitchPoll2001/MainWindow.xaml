@@ -1,0 +1,44 @@
+﻿<Window x:Class="TwitchPoll2001.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TwitchPoll2001"
+        xmlns:loadin="clr-namespace:LoadingIndicators.WPF;assembly=LoadingIndicators.WPF"
+        xmlns:viewModels="clr-namespace:TwitchPoll2001.ViewModels"
+        mc:Ignorable="d"
+        Title="Twitch Poll 2001" Height="350" MinWidth="300" Width="525">
+    <Window.DataContext>
+        <viewModels:MainWindowViewModel />
+    </Window.DataContext>
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/LoadingIndicators.WPF;component/Styles/LoadingWave.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/LoadingIndicators.WPF;component/Styles/LoadingThreeDots.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/LoadingIndicators.WPF;component/Styles/LoadingFlipPlane.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/LoadingIndicators.WPF;component/Styles/LoadingPulse.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/LoadingIndicators.WPF;component/Styles/LoadingDoubleBounce.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid>
+            <StackPanel Margin="5" Orientation="Vertical">
+                <TextBlock>Bot Username</TextBlock>
+                <TextBox Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="0,5,0,5"></TextBox>
+                <TextBlock>Bot Oauth Token</TextBlock>
+                <TextBox Text="{Binding Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="0,5,0,5"></TextBox>
+                <Button Margin="0,5,0,10" Command="{Binding ClickLoginButtonCommand}" >Login</Button>
+                <TextBlock>Channel Name</TextBlock>
+                <TextBox Text="{Binding ChannelName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="0,5,0,5"></TextBox>
+                <Button Margin="0,5,0,5" Command="{Binding JoinChannelCommand}">Join Channel</Button>
+                <Button Margin="0,5,0,5" Command="{Binding LeaveChannelCommand}">Leave Channel</Button>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
