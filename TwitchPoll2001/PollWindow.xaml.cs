@@ -10,30 +10,21 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TwitchPoll2001.ViewModels;
 
 namespace TwitchPoll2001
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for PollWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class PollWindow : Window
     {
-        PollWindow _pollWindow;
-        public MainWindow()
+        public PollViewModel ViewModel { get; set; }
+        public PollWindow()
         {
             InitializeComponent();
-        }
-
-        private void OpenPollView_Click(object sender, RoutedEventArgs e)
-        {
-            if (_pollWindow == null)
-            {
-                _pollWindow = new PollWindow();
-                _pollWindow.Show();
-                _pollWindow.ViewModel.SampleChart();
-            }
+            ViewModel = DataContext as PollViewModel;
         }
     }
 }

@@ -25,10 +25,12 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="200"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid>
-            <StackPanel Margin="5" Orientation="Vertical">
+            <StackPanel Grid.Column="0" Margin="5" Orientation="Vertical">
+                <TextBlock FontSize="15" HorizontalAlignment="Center" FontWeight="Bold">Twitch</TextBlock>
                 <TextBlock>Bot Username</TextBlock>
                 <TextBox Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="0,5,0,5"></TextBox>
                 <TextBlock>Bot Oauth Token</TextBlock>
@@ -38,6 +40,13 @@
                 <TextBox Text="{Binding ChannelName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="0,5,0,5"></TextBox>
                 <Button Margin="0,5,0,5" Command="{Binding JoinChannelCommand}">Join Channel</Button>
                 <Button Margin="0,5,0,5" Command="{Binding LeaveChannelCommand}">Leave Channel</Button>
+            </StackPanel>
+            
+        </Grid>
+        <Grid Grid.Column="1">
+            <StackPanel Grid.Column="1" Margin="5" Orientation="Vertical">
+                <TextBlock FontSize="15" HorizontalAlignment="Center" FontWeight="Bold">Poll</TextBlock>
+                <Button Margin="0,5,0,5" x:Name="OpenPollView" Click="OpenPollView_Click">Open Poll View</Button>
             </StackPanel>
         </Grid>
     </Grid>
