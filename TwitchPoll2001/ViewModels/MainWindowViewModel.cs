@@ -5,12 +5,14 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using PropertyChanged;
 using TwitchLib;
 using TwitchLib.Events.Client;
 using TwitchLib.Models.Client;
 
 namespace TwitchPoll2001.ViewModels
 {
+    [ImplementPropertyChanged]
     public class MainWindowViewModel : NotifierBase
     {
         public MainWindowViewModel()
@@ -74,7 +76,7 @@ namespace TwitchPoll2001.ViewModels
             }
         }
 
-        private bool _connectedToChannel = true;
+        private bool _connectedToChannel;
         public bool ConnectedToChannel
         {
             get { return _connectedToChannel; }
@@ -110,6 +112,40 @@ namespace TwitchPoll2001.ViewModels
                 AddToPollCommand.RaiseCanExecuteChanged();
             }
         }
+
+        private string _pollStarted = "Poll not started";
+        public string PollStarted
+        {
+            get { return _pollStarted; }
+            set
+            {
+                SetProperty(ref _pollStarted, value);
+                OnPropertyChanged();
+            }
+        }
+
+        private string _loggedIn = "";
+        public string LoggedIn
+        {
+            get { return _loggedIn; }
+            set
+            {
+                SetProperty(ref _loggedIn, value);
+                OnPropertyChanged();
+            }
+        }
+
+        private string _joinedChannel = "(empty)";
+        public string JoinedChannel
+        {
+            get { return _joinedChannel; }
+            set
+            {
+                SetProperty(ref _joinedChannel, value);
+                OnPropertyChanged();
+            }
+        }
+
 
         private string _userName;
         public string UserName
@@ -152,6 +188,9 @@ namespace TwitchPoll2001.ViewModels
             }
         }
 
+        
+        public bool HasPollStarted { get; set; }
+
         #endregion
 
         #region TwitchEvents
@@ -159,6 +198,14 @@ namespace TwitchPoll2001.ViewModels
         {
             Console.WriteLine("Client connected to Twitch!");
             IsLoggedIn = true;
+            LoggedIn = "Logged in";
+        }
+
+        private void ClientDisconnected(object sender, OnDisconnectedArgs e)
+        {
+            Console.WriteLine("Client disconnected to Twitch!");
+            IsLoggedIn = false;
+            LoggedIn = "";
         }
 
 
@@ -193,6 +240,11 @@ namespace TwitchPoll2001.ViewModels
         private void ClientChatCommandReceived(object sender, OnChatCommandReceivedArgs e)
         {
             Console.WriteLine($"Client whisper command: {e.Command}");
+            if (HasPollStarted)
+            {
+                var result = PollViewModel.AddToSet(e.Command.ChatMessage.Username, e.Command.Command);
+                Client.SendWhisper(e.Command.ChatMessage.DisplayName, result.Reason);
+            }
             // ChatCommand
         }
 
@@ -202,17 +254,33 @@ namespace TwitchPoll2001.ViewModels
 
         public async Task LeaveChannel()
         {
-            if (Client == null) return;
-            Client.LeaveChannel(ChannelName);
+            Client?.LeaveChannel(ChannelName);
+            JoinedChannel = "(empty)";
         }
 
         public async Task JoinChannel()
         {
-            if (Client == null) return;
-            Client.JoinChannel(ChannelName);
+            Client?.JoinChannel(ChannelName);
+            JoinedChannel = ChannelName;
         }
 
         #endregion
+
+        public async Task StartPollButton()
+        {
+            if (HasPollStarted) return;
+            HasPollStarted = true;
+            Client.SendMessage("The poll has started!");
+            PollStarted = "Poll started";
+        }
+
+        public async Task EndPollButton()
+        {
+            if (!HasPollStarted) return;
+            HasPollStarted = false;
+            Client.SendMessage("The poll has ended!");
+            PollStarted = "Poll not started";
+        }
 
         public async Task AddToPollButton()
         {
@@ -233,6 +301,7 @@ namespace TwitchPoll2001.ViewModels
             {
                 item.Value = 0;
             }
+            PollViewModel.TwitchVoters = new List<TwitchVote>();
         }
 
         public async Task ClickLoginButton()
@@ -242,6 +311,7 @@ namespace TwitchPoll2001.ViewModels
                 Client = new TwitchClient(new ConnectionCredentials(UserName, Password), null, '!', '!', true);
 
                 Client.OnConnected += ClientConnected;
+                Client.OnDisconnected += ClientDisconnected;
                 Client.OnJoinedChannel += ClientJoinedChannel;
                 Client.OnLeftChannel += ClientLeftChannel;
                 Client.OnMessageReceived += ClientMessageReceived;
@@ -249,10 +319,13 @@ namespace TwitchPoll2001.ViewModels
                 Client.OnWhisperCommandReceived += ClientWhisperCommandReceived;
                 Client.OnWhisperReceived += ClientWhisperReceived;
                 Client.Connect();
+                UserName = "";
+                Password = "";
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"{ex.Message}");
+                 
             }
         }
     }

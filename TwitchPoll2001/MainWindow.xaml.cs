@@ -46,16 +46,14 @@ namespace TwitchPoll2001
             ViewModel.ClearPollButton();
         }
 
-        private void RandomPollValues_Click(object sender, RoutedEventArgs e)
+        private void StartPoll_Click(object sender, RoutedEventArgs e)
         {
-            Random r = new Random();
-            int rInt = r.Next(0, 100); //for ints
-            foreach (var item in ViewModel.PollViewModel.PollOptions)
-            {
-                item.Value = rInt;
-                rInt = r.Next(0, 100);
-            }
-            ViewModel.PollViewModel.Chart.Update();
+            ViewModel.StartPollButton();
+        }
+
+        private void EndPoll_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.EndPollButton();
         }
     }
 }

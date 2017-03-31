@@ -7,7 +7,7 @@
         xmlns:loadin="clr-namespace:LoadingIndicators.WPF;assembly=LoadingIndicators.WPF"
         xmlns:viewModels="clr-namespace:TwitchPoll2001.ViewModels"
         mc:Ignorable="d"
-        Title="Twitch Poll 2001" Height="350" MinWidth="600" Width="600">
+        Title="Twitch Poll 2001" Height="430" MinHeight="430" MinWidth="600" Width="600">
     <Window.DataContext>
         <viewModels:MainWindowViewModel />
     </Window.DataContext>
@@ -34,11 +34,14 @@
                 <TextBox Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="0,5,0,5"></TextBox>
                 <TextBlock>Bot Oauth Token</TextBlock>
                 <TextBox Text="{Binding Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="0,5,0,5"></TextBox>
-                <Button Margin="0,5,0,10" Command="{Binding ClickLoginButtonCommand}" >Login</Button>
+                <Button Margin="0,5,0,10" Command="{Binding ClickLoginButtonCommand}">Login</Button>
+                <TextBlock Margin="0,5,0,10" HorizontalAlignment="Center" Text="{Binding LoggedIn}"></TextBlock>
                 <TextBlock>Channel Name</TextBlock>
                 <TextBox Text="{Binding ChannelName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="0,5,0,5"></TextBox>
                 <Button Margin="0,5,0,5" Command="{Binding JoinChannelCommand}">Join Channel</Button>
                 <Button Margin="0,5,0,5" IsEnabled="{Binding IsLoggedIn}" Command="{Binding LeaveChannelCommand}">Leave Channel</Button>
+                <TextBlock FontSize="15" HorizontalAlignment="Center" FontWeight="Bold" Text="Joined Channel :"></TextBlock>
+                <TextBlock FontSize="15" HorizontalAlignment="Center" Text="{Binding JoinedChannel}"></TextBlock>
             </StackPanel>
             
         </Grid>
@@ -65,21 +68,23 @@
                     <TextBlock>Twitch Command</TextBlock>
                     <TextBox x:Name="TwitchCommandTextBox" Text="{Binding TwitchCommand, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="0,5,0,5"></TextBox>
                     <Button Command="{Binding AddToPollCommand}" Margin="0,5,0,10">Add to Poll</Button>
-                    <Button IsEnabled="{Binding PollViewModel.PollOptions, Converter={StaticResource AnyPollOptionsConverter}}" Margin="0,5,0,10">Start Poll</Button>
+                    <Button Click="StartPoll_Click" Margin="0,5,0,10">Start Poll</Button>
+                    <Button Click="EndPoll_Click" Margin="0,5,0,10">End Poll</Button>
                     <Button  Click="ClearPoll_Click" Margin="0,5,0,10">Clear Current Poll Votes</Button>
                     <Button Click="ResetPoll_Click" Margin="0,5,0,10">Reset Poll</Button>
-                    <Button Click="RandomPollValues_Click" Margin="0,5,0,10">Random Values Poll</Button>
+                    <TextBlock FontSize="15" HorizontalAlignment="Center" FontWeight="Bold" Text="{Binding PollStarted}"></TextBlock>
                 </StackPanel>
             </Grid>
             <Grid Grid.Column="1">
                <Grid.RowDefinitions>
                    <RowDefinition Height="Auto"/>
-                   <RowDefinition Height="*"/>
-               </Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
                 <TextBlock FontSize="15" Margin="5" HorizontalAlignment="Center" Grid.Row="0" FontWeight="Bold">Current Poll</TextBlock>
-                <DataGrid Grid.Row="1" IsReadOnly="True" ItemsSource="{Binding PollViewModel.PollOptions}" AutoGenerateColumns="False">
+                <DataGrid Margin="2" Grid.Row="1" IsReadOnly="True" ItemsSource="{Binding PollViewModel.PollOptions}" AutoGenerateColumns="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Width="*" Header="Label" Binding="{Binding Label}" />
+                        <DataGridTextColumn Width="*" Header="Command" Binding="{Binding Command}" />
                         <DataGridTextColumn Header="Votes" Binding="{Binding Value}" />
                     </DataGrid.Columns>
                 </DataGrid>

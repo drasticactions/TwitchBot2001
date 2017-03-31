@@ -11,6 +11,7 @@ using PropertyChanged;
 
 namespace TwitchPoll2001.ViewModels
 {
+    [ImplementPropertyChanged]
     public class PollViewModel : NotifierBase
     {
         public CartesianChart Chart { get; set; }
@@ -67,13 +68,13 @@ namespace TwitchPoll2001.ViewModels
             if (twitchUser != null) return new Result() { IsSuccess = false, Reason = $"You've already voted for {twitchUser.Command}!" };
 
             var twitchCommand = PollOptions.FirstOrDefault(node => node.Command.Equals(command));
-            if (twitchCommand == null) return new Result() { IsSuccess = false, Reason = $"Option {twitchUser.Command} doesn't exist!" };
+            if (twitchCommand == null) return new Result() { IsSuccess = false, Reason = $"Option {command} doesn't exist!" };
 
             TwitchVoters.Add(new TwitchVote { Command = command, Username = username });
             twitchCommand.Value = twitchCommand.Value + 1;
-            Chart.Update();
+            Chart?.Update();
 
-            return new Result() { IsSuccess = true };
+            return new Result() { IsSuccess = true, Reason = $"You've voted for {command}!" };
         }
 
         public void SetupChart()
