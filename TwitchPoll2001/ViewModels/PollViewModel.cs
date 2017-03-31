@@ -3,9 +3,11 @@ using LiveCharts.Configurations;
 using LiveCharts.Wpf;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PropertyChanged;
 
 namespace TwitchPoll2001.ViewModels
 {
@@ -33,8 +35,8 @@ namespace TwitchPoll2001.ViewModels
             }
         }
 
-        private List<PollOption> _pollOptions = new List<PollOption>();
-        public List<PollOption> PollOptions
+        private ObservableCollection<PollOption> _pollOptions = new ObservableCollection<PollOption>();
+        public ObservableCollection<PollOption> PollOptions
         {
             get { return _pollOptions; }
             set
@@ -85,11 +87,12 @@ namespace TwitchPoll2001.ViewModels
                     Values = chartValues
                 }
             };
-
+            Labels = PollOptions.Select(node => node.Label).ToList();
             Formatter = value => value.ToString("N");
         }
     }
 
+    [ImplementPropertyChanged]
     public class PollOption
     {
         public int Id { get; set; }

@@ -65,15 +65,24 @@
                     <TextBlock>Twitch Command</TextBlock>
                     <TextBox x:Name="TwitchCommandTextBox" Text="{Binding TwitchCommand, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="0,5,0,5"></TextBox>
                     <Button Command="{Binding AddToPollCommand}" Margin="0,5,0,10">Add to Poll</Button>
-                    <Button Margin="0,5,0,10">Start Poll</Button>
-                    <Button Margin="0,5,0,10">Reset Poll</Button>
+                    <Button IsEnabled="{Binding PollViewModel.PollOptions, Converter={StaticResource AnyPollOptionsConverter}}" Margin="0,5,0,10">Start Poll</Button>
+                    <Button  Click="ClearPoll_Click" Margin="0,5,0,10">Clear Current Poll Votes</Button>
+                    <Button Click="ResetPoll_Click" Margin="0,5,0,10">Reset Poll</Button>
+                    <Button Click="RandomPollValues_Click" Margin="0,5,0,10">Random Values Poll</Button>
                 </StackPanel>
             </Grid>
             <Grid Grid.Column="1">
-                <TextBlock FontSize="15" Margin="5" HorizontalAlignment="Center" FontWeight="Bold">Current Poll</TextBlock>
-                <Grid VerticalAlignment="Center">
-                    <TextBlock HorizontalAlignment="Center">No polls currently running...</TextBlock>
-                </Grid>
+               <Grid.RowDefinitions>
+                   <RowDefinition Height="Auto"/>
+                   <RowDefinition Height="*"/>
+               </Grid.RowDefinitions>
+                <TextBlock FontSize="15" Margin="5" HorizontalAlignment="Center" Grid.Row="0" FontWeight="Bold">Current Poll</TextBlock>
+                <DataGrid Grid.Row="1" IsReadOnly="True" ItemsSource="{Binding PollViewModel.PollOptions}" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="*" Header="Label" Binding="{Binding Label}" />
+                        <DataGridTextColumn Header="Votes" Binding="{Binding Value}" />
+                    </DataGrid.Columns>
+                </DataGrid>
             </Grid>
         </Grid>
     </Grid>

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using TwitchLib;
@@ -32,7 +34,7 @@ namespace TwitchPoll2001.ViewModels
 
         public bool CanClickLoginButton => !string.IsNullOrWhiteSpace(UserName) && !string.IsNullOrWhiteSpace(Password);
 
-        public bool CanAddToPoll => !string.IsNullOrWhiteSpace(UserName) && !string.IsNullOrWhiteSpace(Password);
+        public bool CanAddToPoll => !string.IsNullOrWhiteSpace(Label) && !string.IsNullOrWhiteSpace(TwitchCommand);
 
         public bool CanJoinChannel => IsLoggedIn && !string.IsNullOrEmpty(ChannelName);
 
@@ -214,7 +216,23 @@ namespace TwitchPoll2001.ViewModels
 
         public async Task AddToPollButton()
         {
-            
+            PollViewModel.PollOptions.Add(new PollOption() {Command = TwitchCommand, Label = Label});
+            PollViewModel.SetupChart();
+            Label = string.Empty;
+            TwitchCommand = string.Empty;
+        }
+
+        public void ResetPollButton()
+        {
+            PollViewModel.PollOptions = new ObservableCollection<PollOption>();
+        }
+
+        public void ClearPollButton()
+        {
+            foreach (var item in PollViewModel.PollOptions)
+            {
+                item.Value = 0;
+            }
         }
 
         public async Task ClickLoginButton()

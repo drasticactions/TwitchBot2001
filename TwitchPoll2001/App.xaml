@@ -8,5 +8,8 @@
 
         <tools:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <tools:BooleanToVisibilityInverter x:Key="BooleanToVisibilityInverter" />
+        <tools:PollOptionsVisibilityConverter x:Key="PollOptionsVisibilityConverter" />
+        <tools:PollOptionsVisibilityInverter x:Key="PollOptionsVisibilityInverter" />
+        <tools:AnyPollOptionsConverter x:Key="AnyPollOptionsConverter" />
     </Application.Resources>
 </Application>
