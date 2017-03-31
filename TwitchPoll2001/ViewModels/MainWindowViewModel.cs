@@ -16,6 +16,9 @@ namespace TwitchPoll2001.ViewModels
             ClickLoginButtonCommand = new AsyncDelegateCommand(async o => { await ClickLoginButton(); },
                 o => CanClickLoginButton);
 
+            AddToPollCommand = new AsyncDelegateCommand(async o => { await AddToPollButton(); },
+                o => CanAddToPoll);
+
             JoinChannelCommand = new AsyncDelegateCommand(async o => { await JoinChannel(); },
                 o => CanJoinChannel);
 
@@ -24,7 +27,12 @@ namespace TwitchPoll2001.ViewModels
         }
 
         #region Properties
+
+        public PollViewModel PollViewModel { get; set; } = new PollViewModel();
+
         public bool CanClickLoginButton => !string.IsNullOrWhiteSpace(UserName) && !string.IsNullOrWhiteSpace(Password);
+
+        public bool CanAddToPoll => !string.IsNullOrWhiteSpace(UserName) && !string.IsNullOrWhiteSpace(Password);
 
         public bool CanJoinChannel => IsLoggedIn && !string.IsNullOrEmpty(ChannelName);
 
@@ -32,6 +40,8 @@ namespace TwitchPoll2001.ViewModels
 
 
         public AsyncDelegateCommand ClickLoginButtonCommand { get; private set; }
+
+        public AsyncDelegateCommand AddToPollCommand { get; private set; }
 
         public AsyncDelegateCommand JoinChannelCommand { get; private set; }
 
@@ -62,7 +72,7 @@ namespace TwitchPoll2001.ViewModels
             }
         }
 
-        private bool _connectedToChannel;
+        private bool _connectedToChannel = true;
         public bool ConnectedToChannel
         {
             get { return _connectedToChannel; }
@@ -70,6 +80,32 @@ namespace TwitchPoll2001.ViewModels
             {
                 SetProperty(ref _connectedToChannel, value);
                 OnPropertyChanged();
+            }
+        }
+
+        private string _label;
+        public string Label
+        {
+            get { return _label; }
+            set
+            {
+                if (_label == value) return;
+                _label = value;
+                OnPropertyChanged();
+                AddToPollCommand.RaiseCanExecuteChanged();
+            }
+        }
+
+        private string _twitchCommand;
+        public string TwitchCommand
+        {
+            get { return _twitchCommand; }
+            set
+            {
+                if (_twitchCommand == value) return;
+                _twitchCommand = value;
+                OnPropertyChanged();
+                AddToPollCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -175,6 +211,11 @@ namespace TwitchPoll2001.ViewModels
         }
 
         #endregion
+
+        public async Task AddToPollButton()
+        {
+            
+        }
 
         public async Task ClickLoginButton()
         {

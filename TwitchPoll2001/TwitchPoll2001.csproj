@@ -75,6 +75,7 @@
     <Compile Include="PollWindow.xaml.cs">
       <DependentUpon>PollWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Tools\ValueConverters.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\NotifierBase.cs" />
     <Compile Include="ViewModels\PollViewModel.cs" />
@@ -122,5 +123,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -7,7 +7,7 @@
         xmlns:loadin="clr-namespace:LoadingIndicators.WPF;assembly=LoadingIndicators.WPF"
         xmlns:viewModels="clr-namespace:TwitchPoll2001.ViewModels"
         mc:Ignorable="d"
-        Title="Twitch Poll 2001" Height="350" MinWidth="300" Width="525">
+        Title="Twitch Poll 2001" Height="350" MinWidth="600" Width="600">
     <Window.DataContext>
         <viewModels:MainWindowViewModel />
     </Window.DataContext>
@@ -25,7 +25,6 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
-            <ColumnDefinition Width="200"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid>
@@ -39,15 +38,43 @@
                 <TextBlock>Channel Name</TextBlock>
                 <TextBox Text="{Binding ChannelName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="0,5,0,5"></TextBox>
                 <Button Margin="0,5,0,5" Command="{Binding JoinChannelCommand}">Join Channel</Button>
-                <Button Margin="0,5,0,5" Command="{Binding LeaveChannelCommand}">Leave Channel</Button>
+                <Button Margin="0,5,0,5" IsEnabled="{Binding IsLoggedIn}" Command="{Binding LeaveChannelCommand}">Leave Channel</Button>
             </StackPanel>
             
         </Grid>
-        <Grid Grid.Column="1">
-            <StackPanel Grid.Column="1" Margin="5" Orientation="Vertical">
-                <TextBlock FontSize="15" HorizontalAlignment="Center" FontWeight="Bold">Poll</TextBlock>
-                <Button Margin="0,5,0,5" x:Name="OpenPollView" Click="OpenPollView_Click">Open Poll View</Button>
+        <Grid Visibility="{Binding ConnectedToChannel, Converter={StaticResource BooleanToVisibilityInverter}}" Grid.Column="1">
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock FontWeight="Bold" FontSize="30" HorizontalAlignment="Center">TwitchPoll2001</TextBlock>
             </StackPanel>
+        </Grid>
+        <Grid Visibility="{Binding ConnectedToChannel, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Margin="5" Orientation="Vertical">
+                    <TextBlock FontSize="15" HorizontalAlignment="Center" FontWeight="Bold">Poll</TextBlock>
+                    <Button Margin="0,5,0,5" x:Name="OpenPollView" Click="OpenPollView_Click">Open Poll View</Button>
+                    <TextBlock>Label</TextBlock>
+                    <TextBox x:Name="LabelTextBox" Text="{Binding Label, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="0,5,0,5"></TextBox>
+                    <TextBlock>Twitch Command</TextBlock>
+                    <TextBox x:Name="TwitchCommandTextBox" Text="{Binding TwitchCommand, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="0,5,0,5"></TextBox>
+                    <Button Command="{Binding AddToPollCommand}" Margin="0,5,0,10">Add to Poll</Button>
+                    <Button Margin="0,5,0,10">Start Poll</Button>
+                    <Button Margin="0,5,0,10">Reset Poll</Button>
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Column="1">
+                <TextBlock FontSize="15" Margin="5" HorizontalAlignment="Center" FontWeight="Bold">Current Poll</TextBlock>
+                <Grid VerticalAlignment="Center">
+                    <TextBlock HorizontalAlignment="Center">No polls currently running...</TextBlock>
+                </Grid>
+            </Grid>
         </Grid>
     </Grid>
 </Window>

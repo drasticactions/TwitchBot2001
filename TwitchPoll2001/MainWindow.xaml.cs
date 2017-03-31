@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TwitchPoll2001.ViewModels;
 
 namespace TwitchPoll2001
 {
@@ -20,20 +21,20 @@ namespace TwitchPoll2001
     /// </summary>
     public partial class MainWindow : Window
     {
-        PollWindow _pollWindow;
+        public MainWindowViewModel ViewModel { get; set; }
         public MainWindow()
         {
             InitializeComponent();
+            ViewModel = DataContext as MainWindowViewModel;
+            
         }
 
         private void OpenPollView_Click(object sender, RoutedEventArgs e)
         {
-            if (_pollWindow == null)
-            {
-                _pollWindow = new PollWindow();
-                _pollWindow.Show();
-                _pollWindow.ViewModel.SampleChart();
-            }
+            var _pollWindow = new PollWindow();
+            _pollWindow.Show();
+            _pollWindow.SetupWindow(ViewModel.PollViewModel);
+            _pollWindow.ViewModel.SetupChart();
         }
     }
 }

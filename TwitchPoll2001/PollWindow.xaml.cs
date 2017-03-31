@@ -24,7 +24,13 @@ namespace TwitchPoll2001
         public PollWindow()
         {
             InitializeComponent();
+        }
+
+        public void SetupWindow(PollViewModel vm)
+        {
+            DataContext = vm;
             ViewModel = DataContext as PollViewModel;
+            ViewModel.Chart = NiceChart;
         }
     }
 }

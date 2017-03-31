@@ -1,4 +1,5 @@
 ﻿using LiveCharts;
+using LiveCharts.Configurations;
 using LiveCharts.Wpf;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace TwitchPoll2001.ViewModels
 {
     public class PollViewModel : NotifierBase
     {
+        public CartesianChart Chart { get; set; }
         private bool _isLoading;
         public bool IsLoading
         {
@@ -31,8 +33,19 @@ namespace TwitchPoll2001.ViewModels
             }
         }
 
-        private string[] _labels;
-        public string[] Labels
+        private List<PollOption> _pollOptions = new List<PollOption>();
+        public List<PollOption> PollOptions
+        {
+            get { return _pollOptions; }
+            set
+            {
+                SetProperty(ref _pollOptions, value);
+                OnPropertyChanged();
+            }
+        }
+
+        private List<string> _labels;
+        public List<string> Labels
         {
             get { return _labels; }
             set
@@ -41,31 +54,63 @@ namespace TwitchPoll2001.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public List<TwitchVote> TwitchVoters { get; set; } = new List<TwitchVote>();
+        
         public Func<double, string> Formatter { get; set; }
 
-        public void SampleChart()
+        public Result AddToSet(string username, string command)
         {
+            var twitchUser = TwitchVoters.FirstOrDefault(node => node.Username.Equals(username));
+            if (twitchUser != null) return new Result() { IsSuccess = false, Reason = $"You've already voted for {twitchUser.Command}!" };
+
+            var twitchCommand = PollOptions.FirstOrDefault(node => node.Command.Equals(command));
+            if (twitchCommand == null) return new Result() { IsSuccess = false, Reason = $"Option {twitchUser.Command} doesn't exist!" };
+
+            TwitchVoters.Add(new TwitchVote { Command = command, Username = username });
+            twitchCommand.Value = twitchCommand.Value + 1;
+            Chart.Update();
+
+            return new Result() { IsSuccess = true };
+        }
+
+        public void SetupChart()
+        {
+            var chartValues = new ChartValues<PollOption>();
+            chartValues.AddRange(PollOptions);
             SeriesCollection = new SeriesCollection
             {
-                new ColumnSeries
+                new RowSeries
                 {
-                    Title = "2015",
-                    Values = new ChartValues<double> { 10, 50, 39, 50 }
+                    Values = chartValues
                 }
             };
 
-            //adding series will update and animate the chart automatically
-            SeriesCollection.Add(new ColumnSeries
-            {
-                Title = "2016",
-                Values = new ChartValues<double> { 11, 56, 42 }
-            });
-
-            //also adding values updates and animates the chart automatically
-            SeriesCollection[1].Values.Add(48d);
-
-            Labels = new[] { "Maria", "Susan", "Charles", "Frida" };
             Formatter = value => value.ToString("N");
         }
+    }
+
+    public class PollOption
+    {
+        public int Id { get; set; }
+        public string Label { get; set; }
+
+        public string Command { get; set; }
+
+        public double Value { get; set; }
+    }
+
+    public class Result
+    {
+        public bool IsSuccess { get; set; }
+
+        public string Reason { get; set; }
+    }
+
+    public class TwitchVote
+    {
+        public string Username { get; set; }
+
+        public string Command { get; set; }
     }
 }

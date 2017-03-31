@@ -2,8 +2,11 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:TwitchPoll2001"
+             xmlns:tools="clr-namespace:TwitchPoll2001.Tools"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+
+        <tools:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <tools:BooleanToVisibilityInverter x:Key="BooleanToVisibilityInverter" />
     </Application.Resources>
 </Application>
