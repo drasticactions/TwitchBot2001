@@ -70,8 +70,8 @@
                     <Button Command="{Binding AddToPollCommand}" Margin="0,5,0,10">Add to Poll</Button>
                     <Button Click="StartPoll_Click" Margin="0,5,0,10">Start Poll</Button>
                     <Button Click="EndPoll_Click" Margin="0,5,0,10">End Poll</Button>
-                    <Button  Click="ClearPoll_Click" Margin="0,5,0,10">Clear Current Poll Votes</Button>
-                    <Button Click="ResetPoll_Click" Margin="0,5,0,10">Reset Poll</Button>
+                    <Button  Click="ClearPoll_Click" Margin="0,5,0,10">Clear Vote Count</Button>
+                    <Button Click="ResetPoll_Click" Margin="0,5,0,10">Create New Poll</Button>
                     <TextBlock FontSize="15" HorizontalAlignment="Center" FontWeight="Bold" Text="{Binding PollStarted}"></TextBlock>
                 </StackPanel>
             </Grid>
