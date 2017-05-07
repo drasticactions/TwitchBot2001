@@ -139,7 +139,7 @@ namespace TwitchPoll2001.ViewModels
                 });
             }
             Labels = PollOptions.Select(node => node.Label).ToList();
-            Formatter = value => value.ToString("N");
+            Formatter = value => value.ToString();
         }
     }
 
