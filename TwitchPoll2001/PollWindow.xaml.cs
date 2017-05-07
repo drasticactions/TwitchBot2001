@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using LiveCharts.Wpf;
+using LiveCharts.Wpf.Charts.Base;
 using TwitchPoll2001.ViewModels;
 
 namespace TwitchPoll2001
@@ -30,6 +32,7 @@ namespace TwitchPoll2001
         {
             DataContext = vm;
             ViewModel = DataContext as PollViewModel;
+            Chart.Colors = ViewModel.ChartColors;
             ViewModel.Chart = NiceChart;
         }
     }

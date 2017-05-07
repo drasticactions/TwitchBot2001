@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using PropertyChanged;
 
 namespace TwitchPoll2001.ViewModels
@@ -14,6 +15,20 @@ namespace TwitchPoll2001.ViewModels
     [ImplementPropertyChanged]
     public class PollViewModel : NotifierBase
     {
+        public PollViewModel()
+        {
+            AxisFontSize = 15;
+            AxisColor = new SolidColorBrush(Colors.Black);
+            ChartColors = new List<Color>
+            {
+                Colors.Red,
+                Colors.Blue,
+                Colors.Purple,
+                Colors.Yellow,
+                Colors.Green,
+                Colors.Black
+            };
+        }
         public CartesianChart Chart { get; set; }
         private bool _isLoading;
         public bool IsLoading
@@ -22,6 +37,39 @@ namespace TwitchPoll2001.ViewModels
             set
             {
                 SetProperty(ref _isLoading, value);
+                OnPropertyChanged();
+            }
+        }
+
+        private int _axisFontSize;
+        public int AxisFontSize
+        {
+            get { return _axisFontSize; }
+            set
+            {
+                SetProperty(ref _axisFontSize, value);
+                OnPropertyChanged();
+            }
+        }
+
+        private List<Color> _chartColors;
+        public List<Color> ChartColors
+        {
+            get { return _chartColors; }
+            set
+            {
+                SetProperty(ref _chartColors, value);
+                OnPropertyChanged();
+            }
+        }
+
+        private Brush _axisColor;
+        public Brush AxisColor
+        {
+            get { return _axisColor; }
+            set
+            {
+                SetProperty(ref _axisColor, value);
                 OnPropertyChanged();
             }
         }
@@ -79,15 +127,17 @@ namespace TwitchPoll2001.ViewModels
 
         public void SetupChart()
         {
-            var chartValues = new ChartValues<PollOption>();
-            chartValues.AddRange(PollOptions);
-            SeriesCollection = new SeriesCollection
+            SeriesCollection = new SeriesCollection();
+            foreach (var item in PollOptions)
             {
-                new RowSeries
+                item.Value = 6;
+                var test = new ChartValues<PollOption> {item};
+                SeriesCollection.Add(new RowSeries()
                 {
-                    Values = chartValues
-                }
-            };
+                    Values = test,
+                    Title = item.Label
+                });
+            }
             Labels = PollOptions.Select(node => node.Label).ToList();
             Formatter = value => value.ToString("N");
         }

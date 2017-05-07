@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using LiveCharts.Wpf.Charts.Base;
 using TwitchPoll2001.ViewModels;
 
 namespace TwitchPoll2001
@@ -54,6 +55,50 @@ namespace TwitchPoll2001
         private void EndPoll_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.EndPollButton();
+        }
+
+        private void AxisFontColorField_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (ViewModel == null || ViewModel.PollViewModel == null) return;
+            var textbox = sender as TextBox;
+            if (textbox == null) return;
+            try
+            {
+                var test = (Color)System.Windows.Media.ColorConverter.ConvertFromString(textbox.Text);
+                ViewModel.PollViewModel.AxisColor = new SolidColorBrush(test);
+            }
+            catch (Exception exception)
+            {
+                // Ignore errors, set it to black.
+                ViewModel.PollViewModel.AxisColor = new SolidColorBrush(Colors.Black);
+            }
+        }
+
+        private void AxisColors_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (ViewModel == null || ViewModel.PollViewModel == null) return;
+            var textbox = sender as TextBox;
+            if (textbox == null) return;
+
+            try
+            {
+                var colorStringList = textbox.Text.Split(',');
+                ViewModel.PollViewModel.ChartColors = colorStringList.Select(item => (Color) System.Windows.Media.ColorConverter.ConvertFromString(item)).ToList();
+                Chart.Colors = ViewModel.PollViewModel.ChartColors;
+            }
+            catch (Exception exception)
+            {
+                ViewModel.PollViewModel.ChartColors = new List<Color>
+                {
+                    Colors.Red,
+                    Colors.Blue,
+                    Colors.Purple,
+                    Colors.Yellow,
+                    Colors.Green,
+                    Colors.Black
+                };
+                Chart.Colors = ViewModel.PollViewModel.ChartColors;
+            }
         }
     }
 }

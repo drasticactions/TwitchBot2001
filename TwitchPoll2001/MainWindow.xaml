@@ -7,7 +7,7 @@
         xmlns:loadin="clr-namespace:LoadingIndicators.WPF;assembly=LoadingIndicators.WPF"
         xmlns:viewModels="clr-namespace:TwitchPoll2001.ViewModels"
         mc:Ignorable="d"
-        Title="Twitch Poll 2001" Height="430" MinHeight="430" MinWidth="600" Width="600">
+        Title="Twitch Poll 2001" Height="510" MinHeight="510" MinWidth="600" Width="600">
     <Window.DataContext>
         <viewModels:MainWindowViewModel />
     </Window.DataContext>
@@ -62,6 +62,12 @@
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Margin="5" Orientation="Vertical">
                     <TextBlock FontSize="15" HorizontalAlignment="Center" FontWeight="Bold">Poll</TextBlock>
+                    <TextBlock>Poll Font Size</TextBlock>
+                    <TextBox  Text="{Binding PollViewModel.AxisFontSize, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="0,5,0,5"></TextBox>
+                    <TextBlock>Poll Axis Font Color</TextBlock>
+                    <TextBox x:Name="AxisFontColorField" TextChanged="AxisFontColorField_OnTextChanged" Text="black" Margin="0,5,0,5"></TextBox>
+                    <TextBlock>Poll Axis Colors</TextBlock>
+                    <TextBox x:Name="AxisColors" TextChanged="AxisColors_OnTextChanged" Text="Red, Blue, Purple, Yellow, Green, Black" Margin="0,5,0,5"></TextBox>
                     <Button Margin="0,5,0,5" x:Name="OpenPollView" Click="OpenPollView_Click">Open Poll View</Button>
                     <TextBlock>Label</TextBlock>
                     <TextBox x:Name="LabelTextBox" Text="{Binding Label, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="0,5,0,5"></TextBox>
