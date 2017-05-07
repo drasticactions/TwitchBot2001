@@ -130,7 +130,6 @@ namespace TwitchPoll2001.ViewModels
             SeriesCollection = new SeriesCollection();
             foreach (var item in PollOptions)
             {
-                item.Value = 6;
                 var test = new ChartValues<PollOption> {item};
                 SeriesCollection.Add(new RowSeries()
                 {
